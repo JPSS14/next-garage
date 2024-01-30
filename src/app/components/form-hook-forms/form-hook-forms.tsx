@@ -1,9 +1,10 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Input } from "..";
+import { Input, TextArea } from "..";
 
 type InputProps = {
   name: string;
+  description: string;
 };
 
 export const FormHookForms = () => {
@@ -16,6 +17,11 @@ export const FormHookForms = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input placeholder="Teste" {...register("name")} label="Teste" />
+      <TextArea
+        label="TextArea:"
+        placeholder="Testando"
+        {...register("description")}
+      />
       <button type="submit">Enviar</button>
     </form>
   );
