@@ -3,10 +3,14 @@ import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import { Input, TextArea } from "..";
 import { SelectItems } from "./types";
 import { Select } from "../select";
+import { useState } from "react";
 
 type InputProps = {
   name: string;
-  description: string;
+  description?: {
+    title?: string;
+    textDescription?: string;
+  }[];
   items: string;
 };
 
@@ -17,6 +21,11 @@ const selectItems: SelectItems[] = [
 
 export const FormHookForms = () => {
   const { register, handleSubmit, control } = useForm<InputProps>();
+  const [descriptionIndex, setDescriptionIndex] = useState<number[]>([0]);
+
+  const handleAddDescription = () => {
+    setDescriptionIndex([...descriptionIndex, descriptionIndex.length]);
+  };
 
   const onSubmit: SubmitHandler<InputProps> = (data) => {
     console.log(data);
@@ -25,11 +34,20 @@ export const FormHookForms = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input placeholder="Teste" {...register("name")} label="Teste" />
-      <TextArea
-        label="TextArea:"
-        placeholder="Testando"
-        {...register("description")}
-      />
+      {descriptionIndex.map((index) => (
+        <div key={index}>
+          <Input
+            placeholder="Title"
+            {...register(`description.${index}.title`)}
+            label="Title"
+          />
+          <TextArea
+            label="TextArea:"
+            placeholder="Testando"
+            {...register(`description.${index}.textDescription`)}
+          />
+        </div>
+      ))}
       <Controller
         name="items"
         control={control}
@@ -38,6 +56,9 @@ export const FormHookForms = () => {
         )}
       />
       <button type="submit">Enviar</button>
+      <button onClick={() => handleAddDescription()}>
+        Adiconar Description
+      </button>
     </form>
   );
 };
